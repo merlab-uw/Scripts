@@ -1,5 +1,5 @@
 ################## SUBSET GENEPOP FILE WITH LIST OF LOCI ######################
-# 20180529 Natalie Lowell
+# 20180621 Natalie Lowell
 # PURPOSE: to subset a Genepop file with a list of loci to keep
 # INPUTS: managed by argparse below, include:
 # - genepop file to filter
@@ -55,14 +55,13 @@ for locus in locus_names_to_keep:
 
 # start with new line
 filtered_genepop = open(args.outfile, "w")
+filtered_genepop.write("# Genepop file made with subset_GP_forloci.py")
 
 # add locus names, either one on each line or in header
 if args.format == 1:
-    filtered_genepop.write("\n")
     for locus in locus_names_to_keep:
         filtered_genepop.write(locus + "\n")
 else:
-    filtered_genepop.write("\n")
     header = ""
     for locus in locus_names_to_keep:
         header += locus + ","
