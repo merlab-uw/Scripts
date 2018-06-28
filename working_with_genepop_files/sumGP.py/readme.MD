@@ -8,6 +8,6 @@ The purpose of the `sumGP.py` script is to automate the process of running Genep
 
 For more information, call the script with the help flag, `-h`:
 
-``python sumGP,py -h``
+``python sumGP.py -h``
 
 Natalie Lowell, June 28, 2018
