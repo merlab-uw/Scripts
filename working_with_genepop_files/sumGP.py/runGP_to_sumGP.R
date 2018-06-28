@@ -1,8 +1,9 @@
 #############################################################
 
-# 20180627 NL
+# 20180628 NL
 # Compute basic pop gen functions in Genepop for parsing into 
-# computer readible formats and a summary file
+# computer readible formats and producing summary plots and
+# output files in the sumGP.py script
 
 #############################################################
 
