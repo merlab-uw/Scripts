@@ -1,5 +1,5 @@
 ################################# sumGP.py ####################################
-# 20180628 Natalie Lowell
+# 20180702 Natalie Lowell
 # PURPOSE: to provide clear, parsed versions of Genepop output files and
 # produce basic summary plots and output files of common Genepop-related 
 # tasks
@@ -27,15 +27,16 @@ args = parser.parse_args()
 
 ###### ---Call R script to perform functions in Genepop-- ######
 
-# get base working directory where current script is stored
-basedir = os.path.dirname(os.path.realpath(sys.argv[0]))
-
 # get genepop filename (gp_filename) and directory (gp_dir) from absolute path to genepop file
+
 gp_path_list = args.infile.split("/")
 gp_dir= ""
 for x in gp_path_list[:-1]:
     gp_dir += x + "/"
 gp_filename = gp_path_list[-1]
+
+# get base working directory where current script is stored
+basedir = os.path.dirname(os.path.realpath(sys.argv[0]))
 
 # generate names of genepop output files, using file name of genepop without file extension
 gp_filename_list = gp_filename.split(".")
@@ -50,9 +51,10 @@ Diff_out_filename = corename + "_Diff_out.txt"
 BasicInfo_out_filename = corename + "BI_out.txt"
 
 # make directory for genepop summary files, if doesn't already exist
-if not os.path.exists("Genepop_summary_files"):
-    os.makedirs("Genepop_summary_files")
-os.chdir("Genepop_summary_files")
+os.chdir(gp_dir)
+if not os.path.exists(corename + "_GPsumfiles"):
+    os.makedirs(corename + "_GPsumfiles")
+os.chdir(corename + "_GPsumfiles")
 
 # call gp_sum.R to run genepop functions
 call_R_string = "Rscript " + basedir + "/runGP_to_sumGP.R " 
@@ -169,7 +171,7 @@ for pop_row in clean_key_list:
     pop_row_list = pop_row.split()
     pop_key_names[pop_row_list[1]] = pop_row_list[0]
     pop_key_nums[pop_row_list[0]] = pop_row_list[1]    
-
+    
 # build a dictionary that holds Fst estimates for each pair of populations
 Fst_pairwise_table_lines = Fst_out_text.split("Estimates for all loci (diploid):")[1].split("\n")[3:-4]
 Fst_dict = {}
@@ -195,8 +197,8 @@ pairwise_pvals = {}
 for line in diff_file_pairs_lines[4:-2]:
     if line != "" and line[0] != "-" and line[0] != " ":
         pairs_linelist = line.strip().split()
-        pop_pos1 = pop_key_names[pairs_linelist[0]]
-        pop_pos2 = pop_key_names[pairs_linelist[2]]
+        pop_pos1 = pop_key_names[pairs_linelist[0][0:8]]
+        pop_pos2 = pop_key_names[pairs_linelist[2][0:8]]
         combo = "&".join([pop_pos1, pop_pos2])
         reverse_combo = "&".join([pop_pos2,pop_pos1])
         if combo not in pairwise_pvals:
@@ -298,7 +300,7 @@ for locus in ordered_loci:
 polymorph_array = open(corename + "_perc_polymorph_array.csv", "w")
 polymorph_array.write("locus_name" + "\t" + "percent_pops_polymorphic" + "\n")
 for locus in ordered_loci:
-    polymorph_array.write(locus + "\t" + str(perc_polymorph[locus][0]*100)[0:4] + "%\n")
+    polymorph_array.write(locus + "\t" + str(perc_polymorph[locus][0]*100)[0:5] + "%\n")
 polymorph_array.close()
 
 # make a histogram of population counts for which a locus is polymorphic
