@@ -1,5 +1,5 @@
 ################## SUBSET GENEPOP FILE WITH LIST OF LOCI ######################
-# 20180710 Natalie Lowell
+# 20180711 Natalie Lowell
 # PURPOSE: to subset a Genepop file with a list of loci to keep
 # INPUTS: managed by argparse below, include:
 # - genepop file to filter
@@ -13,7 +13,7 @@
 import argparse
 parser = argparse.ArgumentParser(description="Filter Genepop file to include only provided locus names.")
 parser.add_argument("-i", "--infile", help="input Genepop file for filtering", type=str, required=True)
-parser.add_argument("-f", "--format", help="input Genepop header format, answer 1 if locus names are each on a line and 2 if locus names are in one line separated by commas", type=float, required=True)
+parser.add_argument("-f", "--format", help="input Genepop header format, answer 1 if locus names are each on a line and 2 if locus names are in one line separated by commas", type=str, required=True)
 parser.add_argument("-l", "--loci", help="text file of loci to keep, with each locus name on its own line", type=str, required=True)
 parser.add_argument("-o", "--outfile", help="filtered Genepop file", type=str, required=True)
 args = parser.parse_args()
@@ -32,7 +32,6 @@ genepop_str = genepop.read()
 genepop_lines = genepop_str.split("\n")
 
 # get locus names out of genepop file
-import re
 all_locus_names = []
 gp_chunks = []
 gp_chunk_lines = []
@@ -42,19 +41,18 @@ for line in genepop_lines:
     elif line.strip() == "pop" or line.strip() == "Pop":
         gp_chunks.append(gp_chunk_lines)
         gp_chunk_lines = []
-if args.format == 1:
+gp_chunks.append(gp_chunk_lines)
+
+if args.format == "1":
     for line in gp_chunks[0]:
         if line != "" and line[0] != "#":
             all_locus_names.append(line.strip())
-if args.format == 2:
+if args.format == "2":
     for line in gp_chunks[0]:
         if line != "" and line[0] != "#":
             locus_names = line.split(",")
             for locus in locus_names:
                 all_locus_names.append(locus.strip())        
-else:
-    print("You did not specify an appropriate Genepop header format value. Use 1 for loci names each on their own line and 2 for loci names in one line separated by commas")
-genepop.close()
 
 # get indeces of loci to keep in genepop file
 indeces_loci_to_keep = []
@@ -74,16 +72,16 @@ filtered_genepop = open(args.outfile, "w")
 filtered_genepop.write(new_header+ "\n")
 
 # add locus names, either one on each line or in header
-if args.format == 1:
+if args.format == "1":
     for locus in locus_names_to_keep:
         filtered_genepop.write(locus + "\n")
-else:
+elif args.format == "2":
     header = ""
     for locus in locus_names_to_keep:
         header += locus + ","
     header = header [:-1]
     filtered_genepop.write(header + "\n")
-
+    
 # add pop and genotype lines
 for gp_chunk in gp_chunks[1:]:
     filtered_genepop.write("pop\n")
@@ -97,3 +95,4 @@ for gp_chunk in gp_chunks[1:]:
                 filtered_genepop.write(" " + genotypes[index])
             filtered_genepop.write("\n")
 filtered_genepop.close()
+
