@@ -1,5 +1,5 @@
 ################################# sumGP.py ####################################
-# 20180702 Natalie Lowell
+# 20180712 Natalie Lowell
 # PURPOSE: to provide clear, parsed versions of Genepop output files and
 # produce basic summary plots and output files of common Genepop-related 
 # tasks
@@ -34,6 +34,8 @@ gp_dir= ""
 for x in gp_path_list[:-1]:
     gp_dir += x + "/"
 gp_filename = gp_path_list[-1]
+if gp_dir == "":
+    gp_dir = "./"
 
 # get base working directory where current script is stored
 basedir = os.path.dirname(os.path.realpath(sys.argv[0]))
@@ -58,7 +60,7 @@ os.chdir(corename + "_GPsumfiles")
 
 # call gp_sum.R to run genepop functions
 call_R_string = "Rscript " + basedir + "/runGP_to_sumGP.R " 
-call_R_string += gp_dir + gp_filename
+call_R_string += "../" + gp_filename
 call_R_string += " " + HWE_out_filename
 call_R_string += " " + Fst_out_filename
 call_R_string += " " + Fst_out_filename2
@@ -123,16 +125,16 @@ for x in range(num_pops):
 
 # write pvals array file that can be more easily used to analyze HWE data
 pvals_array_file = open(corename + "_HWE_pval_array.csv", "w")
-pvals_array_file_header = "locus_name" + "\t"
+pvals_array_file_header = "locus_name" + ","
 for pop in range(num_pops):
-    pvals_array_file_header += "pop_" + str(pop + 1) + "\t"
+    pvals_array_file_header += "pop_" + str(pop + 1) + ","
 pvals_array_file_header = pvals_array_file_header[:-1]
 pvals_array_file.write(pvals_array_file_header + "\n")
 for locus in ordered_loci:
     locus_vals = pval_dict[locus]
-    locus_line = locus + "\t"
+    locus_line = locus + ","
     for val in locus_vals:
-        locus_line += str(val) + "\t"
+        locus_line += str(val) + ","
     locus_line = locus_line[:-1]
     pvals_array_file.write(locus_line + "\n")
 pvals_array_file.close()
@@ -143,15 +145,11 @@ for num in range(num_pops):
     num_pops_xlabel = str(num + 1)
     num_pops_xlabel_list.append(num_pops_xlabel)
 
-# make sure yticks are integers
-yticks = [i + 1 for i in range(max(num_out_in_x_pops_list))]
-
 # Make bar plot with counts of loci out of HWE by number of pops
 fig = plt.figure()
 plt.bar(num_pops_xlabel_list,num_out_in_x_pops_list, width = .25)
 plt.ylabel("Number of loci")
 plt.xlabel("Out of HWE in X populations")
-plt.yticks(yticks)
 plt.title("Number of loci out of HWE (p < 0.05) in each number of populations")
 plt.savefig(corename + "_HWE_hist.png", dpi=fig.dpi)
     
@@ -211,7 +209,7 @@ diff_file.close()
 Fst_diffpval_array = open(corename + "_Fst_gendiff_array.csv","w")
 Fst_diffpval_array_header = ""
 for popnum in range(num_pops):
-    Fst_diffpval_array_header += "\t" + pop_key_nums[str(popnum + 1)]
+    Fst_diffpval_array_header += "," + pop_key_nums[str(popnum + 1)]
 Fst_diffpval_array.write(Fst_diffpval_array_header + "\n")
 for popy in range(num_pops):
     this_line = pop_key_nums[str(popy + 1)]
@@ -224,7 +222,7 @@ for popy in range(num_pops):
             new_cell = pairwise_pvals["&".join([str(popx + 1), str(popy + 1)])]
             if new_cell == "sign.":
                 new_cell = "Highly sign."
-        this_line += "\t" + new_cell
+        this_line += "," + new_cell
     Fst_diffpval_array.write(this_line + "\n")
 Fst_diffpval_array.close()
 
@@ -243,11 +241,12 @@ for locus_table in BI_file_locus_tables[1:]:
     table_locus = locus_table_lines[0].strip()
     af_dict[table_locus] = []
     for line in locus_table_lines[1:]:
-        if line != "" and line[0] != " " and line[0] != "-":
+        if line != "" and line[0] != " " and line[0] != "-" and line[0:14] != "Normal ending.":
             locus_table_linelist = line.strip().split()
             locus_pop_afs = []
             for value in locus_table_linelist[1:-1]:
-                locus_pop_afs.append(value)
+                if value != "-":
+                    locus_pop_afs.append(value)
             af_dict[locus_table_lines[0].strip()].append(locus_pop_afs)
 
 # get maximum number of alleles per locus for iterating through in next code block
@@ -259,53 +258,62 @@ max_alleles_per_locus = max(num_alleles_per_locus_list)
 
 # write clean array file of allele frequencies per population 
 afs_array_file = open(corename + "_AFs_array.csv", "w")
-afs_array_file_header = "pop" + "\t" + "locus_name"
+afs_array_file_header = "pop" + "," + "locus_name"
 for x in range(max_alleles_per_locus):
-    afs_array_file_header += "\t" + "allele_" + str(x + 1)
+    afs_array_file_header += "," + "allele_" + str(x + 1)
 afs_array_file.write(afs_array_file_header + "\n")
 for locus in ordered_loci:
     for pop in range(num_pops):
-        this_row = "pop_" + str(pop + 1) + "\t" + str(locus)
+        this_row = "pop_" + str(pop + 1) + "," + str(locus)
         locus_afs = af_dict[locus]
         this_pop_afs = locus_afs[pop]
         afs_string = ""
         for af in this_pop_afs:
-            afs_string += "\t" + af
+            afs_string += "," + af
         if len(this_pop_afs) < max_alleles_per_locus:
             diff = max_alleles_per_locus - len(this_pop_afs)
             for i in range(diff):
-                afs_string += "\t"+ "NA"
+                afs_string += ","+ "NA"
         this_row += afs_string
         afs_array_file.write(this_row + "\n")
 afs_array_file.close()
 
-# calculate what percent of populations a locus is polymorphic in
-perc_polymorph = {}
-polymorph_counts = []
+# make dictionary with locus as key and value is list with number of pops locus observed in,
+# number of pops locus polymorphic in, number of pops locus not polymorphic, and proportion
+# of pops with observed locus polymoprhic
+polymorph_d = {}
+num_pops_polymorph_counts = []
 for locus in ordered_loci:
     pop_polymorphic_count = 0
     pop_npolymorphic_count = 0
+    locus_afs = af_dict[locus]
     for pop in range(num_pops):
-        locus_afs = af_dict[locus]
         this_pop_afs = locus_afs[pop]
-        first_af = this_pop_afs[0]
-        if float(first_af) < 1 and float(first_af) > 0:
-            pop_polymorphic_count += 1
-        else:
-            pop_npolymorphic_count += 1
-    polymorph_counts.append(pop_polymorphic_count)
-    perc_polymorph[locus] = [float(pop_polymorphic_count)/(float(pop_polymorphic_count + pop_npolymorphic_count))]
+        if len(this_pop_afs) != 0:
+            first_af = this_pop_afs[0]
+            if first_af != "-":
+                if float(first_af) < 1 and float(first_af) > 0:
+                    pop_polymorphic_count += 1
+                elif float(first_af) == 0 or float(first_af) == 1:
+                    pop_npolymorphic_count += 1
+    num_pops_polymorph_counts.append(pop_polymorphic_count)
+    pop_observed_count = pop_polymorphic_count + pop_npolymorphic_count
+    polymorph_d[locus] = [pop_observed_count, pop_polymorphic_count, pop_npolymorphic_count]
 
 # Make array with locus name and percent of populations polymorphic
-polymorph_array = open(corename + "_perc_polymorph_array.csv", "w")
-polymorph_array.write("locus_name" + "\t" + "percent_pops_polymorphic" + "\n")
+polymorph_array = open(corename + "_polymorphism_array.csv", "w")
+polymorph_array.write("locus_name,npops_observed,npops_polymorphic,npops_monomorphic,proportion_observed_pops_polymorphic" + "\n")
 for locus in ordered_loci:
-    polymorph_array.write(locus + "\t" + str(perc_polymorph[locus][0]*100)[0:5] + "%\n")
+    obs = str(polymorph_d[locus][0])
+    poly = str(polymorph_d[locus][1])
+    mono = str(polymorph_d[locus][2])
+    prop = str(float(polymorph_d[locus][1])/float(polymorph_d[locus][0]))
+    polymorph_array.write(locus + "," + obs + "," + poly + "," + mono + "," + prop + "\n")
 polymorph_array.close()
 
 # make a histogram of population counts for which a locus is polymorphic
 fig = plt.figure()
-plt.hist(polymorph_counts, bins = np.arange(0,num_pops+2,.5)-.25)
+plt.hist(num_pops_polymorph_counts, bins = np.arange(0,num_pops+2,.5)-.25)
 plt.title("Number of populations for which a locus is polymorphic")
 plt.ylabel("Frequency")
 plt.xlabel("Number of populations")
@@ -325,9 +333,12 @@ global_Fst = []
 global_Fit = []
 for line in globalFst_table_lines[3:-4]:
     linelist = line.strip().split()
-    global_Fis.append(float(linelist[1]))
-    global_Fst.append(float(linelist[2]))
-    global_Fit.append(float(linelist[3]))
+    if linelist[1].isdigit():
+        global_Fis.append(float(linelist[1]))
+    if linelist[2].isdigit():
+        global_Fst.append(float(linelist[2]))
+    if linelist[3].isdigit():
+        global_Fit.append(float(linelist[3]))
 
 # plot histograms of global Fis, Fst, and Fit
 fig = plt.figure()
