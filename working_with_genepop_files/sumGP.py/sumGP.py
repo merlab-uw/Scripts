@@ -66,7 +66,7 @@ call_R_string += " " + Fst_out_filename
 call_R_string += " " + Fst_out_filename2
 call_R_string += " " + Diff_out_filename
 call_R_string += " " + BasicInfo_out_filename
-sp.call([call_R_string],shell=True)
+# sp.call([call_R_string],shell=True)
 
 ### ----------------------- Parse HWE output file --------------------------###
 
@@ -333,11 +333,11 @@ global_Fst = []
 global_Fit = []
 for line in globalFst_table_lines[3:-4]:
     linelist = line.strip().split()
-    if linelist[1].isdigit():
+    if linelist[1] != "-":
         global_Fis.append(float(linelist[1]))
-    if linelist[2].isdigit():
+    if linelist[2] != "-":
         global_Fst.append(float(linelist[2]))
-    if linelist[3].isdigit():
+    if linelist[3] != "-":
         global_Fit.append(float(linelist[3]))
 
 # plot histograms of global Fis, Fst, and Fit
