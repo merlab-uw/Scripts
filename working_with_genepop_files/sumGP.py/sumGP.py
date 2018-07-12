@@ -66,7 +66,7 @@ call_R_string += " " + Fst_out_filename
 call_R_string += " " + Fst_out_filename2
 call_R_string += " " + Diff_out_filename
 call_R_string += " " + BasicInfo_out_filename
-# sp.call([call_R_string],shell=True)
+sp.call([call_R_string],shell=True)
 
 ### ----------------------- Parse HWE output file --------------------------###
 
