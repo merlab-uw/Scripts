@@ -1,5 +1,5 @@
 ################################# sumGP.py ####################################
-# 20180712 Natalie Lowell
+# 20180713 Natalie Lowell
 # PURPOSE: to provide clear, parsed versions of Genepop output files and
 # produce basic summary plots and output files of common Genepop-related 
 # tasks
@@ -66,7 +66,7 @@ call_R_string += " " + Fst_out_filename
 call_R_string += " " + Fst_out_filename2
 call_R_string += " " + Diff_out_filename
 call_R_string += " " + BasicInfo_out_filename
-sp.call([call_R_string],shell=True)
+#sp.call([call_R_string],shell=True)
 
 ### ----------------------- Parse HWE output file --------------------------###
 
@@ -176,8 +176,9 @@ Fst_dict = {}
 for line in Fst_pairwise_table_lines:
     Fst_pairwise_linelist = line.strip().split()
     popy = Fst_pairwise_linelist[0]
-    for pval in Fst_pairwise_linelist[1:]:
-        popx = Fst_pairwise_linelist.index(pval)
+    for i in range(1, len(Fst_pairwise_linelist)):
+        popx = i
+        pval = Fst_pairwise_linelist[popx]
         combo = "&".join([popy,str(popx)]) 
         reverse_combo = "&".join([str(popx),popy]) 
         if combo not in Fst_dict:
@@ -222,7 +223,7 @@ for popy in range(num_pops):
             new_cell = pairwise_pvals["&".join([str(popx + 1), str(popy + 1)])]
             if new_cell == "sign.":
                 new_cell = "Highly sign."
-        this_line += "," + new_cell
+        this_line += "," + str(new_cell)
     Fst_diffpval_array.write(this_line + "\n")
 Fst_diffpval_array.close()
 
