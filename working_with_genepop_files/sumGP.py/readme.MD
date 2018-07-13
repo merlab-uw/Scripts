@@ -2,7 +2,7 @@
 
 ### Purpose
 
-The purpose of the `sumGP.py` script is to automate the process of running Genepop, get an overview of the data, and parse output files into arrays that are computer readable. `sumGP.py` calls the Genepop program through the `genepop` package in R using the R script `runGP_to_sumGP.R`. It runs Hardy Weinberg exact tests, genic differentiation tests, estimates pairwise Fst, estimates global Fst, Fis, and Fit per locus, and generates allele frequencies through the basic info function. Then, `sumGP.py` makes a folder in the same directory as the Genepop file and stores the following:
+The purpose of the `sumGP.py` script is to automate the process of running Genepop, get an overview of the data, and parse output files into arrays that are more user friendly. `sumGP.py` calls the Genepop program through the `genepop` package in R using the R script `runGP_to_sumGP.R`. It runs Hardy Weinberg exact tests, genic differentiation tests, estimates pairwise Fst, estimates global Fst, Fis, and Fit per locus, and generates allele frequencies through the basic info function. Then, `sumGP.py` makes a folder in the same directory as the Genepop file and stores the following:
  - Genepop output files
  - computer readable CSVs of Genepop output files for allele frequencies & HWE pvalues
  - histograms of global Fis, Fst, and Fit as well as populations where loci are out of HWE
@@ -10,21 +10,33 @@ The purpose of the `sumGP.py` script is to automate the process of running Genep
 
 ### More about the output files
 
-The script names the output file directory and output files based on the input file name. For example, if your input file is named `inputfile.gen`, then the output file directory will be named `inputfile_GPsumfiles`. And, 
+The script names the output file directory and output files based on the input file name. For example, if your input file is named `inputfile.gen`, then the output file directory will be named `inputfile_GPsumfiles`. To learn more about the Genepop output files, check out the [Genepop manual](http://kimura.univ-montp2.fr/~rousset/Genepop4.7.pdf). Below are the names for the Genepop output files.
 
 - `inputfile_HWE_out.txt` will the the Genepop output file of the Hardy Weinberg exact test
 - `inputfile_Fst_out.txt` and `inputfile_Fst_out.txt.MIG` wlil be the Genepop output files of the Fst estimation, between all groups
 - `inputfile_Fst_global_out.txt` will be the Genepop output file of the global Fst estimation
-- `inputfile_Diff_out.txt` will be the Genepop output file of the genic differentiation test 
+- `inputfile_Diff_out.txt` will be the Genepop output file of the genic differentiation test
+- `inputfile_BI_out.txt` will be the Genepop output file for the basic info function
 
+In addition to the Genepop output files, `sumGP.py` produces additional plots and CSV files, listed below with descriptions.
+
+ - `inputfile_AFs_array.csv` is an array with allele frequencies of every allele, of every locus, within every population. The script works as well for multiallelic loci. NAs exist where an allele was not observed.
+
+![img](https://github.com/nclowell/SeaCukes/blob/master/Imgs_for_Notebooks/afs_for_sumgpreadme2.png?raw=true)
+
+- `inputfile_Fst_gendiff_array.csv` is a pairwise population comparison table where values in the upper right are p- values from the genic differentiation tests, and values in the lower left are Fst estimates.
+
+![img]()
+
+- 
 
 ### Dependencies
 
 This script calls the `genepop` package in R, so you have to have installed both R and this package. Additionally, the R script `runGP_to_sumGP.R` should be saved in the same directory as the `sumGP.py` script. The parsing of Genepop output files depends on filenames that do not start with "-". The script uses the nonstandard modules `matplotlib` and `numpy`, so make sure they are installed.
 ### Help
 
-For more information, call the script with the help flag, `-h`:
+For help running the script, call the script with the help flag, `-h`:
 
 ``$ python sumGP.py -h``
 
-Natalie Lowell, June 28, 2018
+Natalie Lowell, July 13, 2018
