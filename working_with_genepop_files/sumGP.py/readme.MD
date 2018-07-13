@@ -12,19 +12,19 @@ The purpose of the `sumGP.py` script is to automate the process of running Genep
 
 The script names the output file directory and output files based on the input file name. For example, if your input file is named `inputfile.gen`, then the output file directory will be named `inputfile_GPsumfiles`. To learn more about the Genepop output files, check out the [Genepop manual](http://kimura.univ-montp2.fr/~rousset/Genepop4.7.pdf). Below are the names for the Genepop output files.
 
-- `inputfile_HWE_out.txt` will the the Genepop output file of the Hardy Weinberg exact test
-- `inputfile_Fst_out.txt` and `inputfile_Fst_out.txt.MIG` wlil be the Genepop output files of the Fst estimation, between all groups
+- `inputfile_HWE_out.txt` will be the the Genepop output file of the Hardy Weinberg exact test
+- `inputfile_Fst_out.txt` and `inputfile_Fst_out.txt.MIG` will be the Genepop output files of the Fst estimation, between all groups
 - `inputfile_Fst_global_out.txt` will be the Genepop output file of the global Fst estimation
 - `inputfile_Diff_out.txt` will be the Genepop output file of the genic differentiation test
 - `inputfile_BI_out.txt` will be the Genepop output file for the basic info function
 
-In addition to the Genepop output files, `sumGP.py` produces additional plots and CSV files, listed below with descriptions.
+In addition to the Genepop output files, `sumGP.py` produces CSV and PNG files, listed below with descriptions.
 
- - `inputfile_AFs_array.csv` is an array with allele frequencies of every allele, of every locus, within every population. The script works as well for multiallelic loci. NAs exist where an allele was not observed.
+ - `inputfile_AFs_array.csv` is an array with allele frequencies of every allele, of every locus, within every population. NAs exist where an allele was not observed in a population.
 
 ![img](https://github.com/nclowell/SeaCukes/blob/master/Imgs_for_Notebooks/afs_for_sumgpreadme2.png?raw=true)
 
-- `inputfile_Fst_gendiff_array.csv` is a pairwise population comparison table where values in the upper right are p- values from the genic differentiation tests, and values in the lower left are Fst estimates. NAs will the cells where populations are compared to themselves.
+- `inputfile_Fst_gendiff_array.csv` is a pairwise population comparison table where values in the upper right are p- values from the genic differentiation tests, and values in the lower left are Fst estimates. NAs fill the cells where populations are compared to themselves.
 
 ![img](https://github.com/nclowell/SeaCukes/blob/master/Imgs_for_Notebooks/diff_fst_for_readme.png?raw=true)
 
@@ -32,7 +32,7 @@ In addition to the Genepop output files, `sumGP.py` produces additional plots an
 
 ![img](https://github.com/nclowell/SeaCukes/blob/master/Imgs_for_Notebooks/pval_for_readme.png?raw=true)
 
-- `inputfile_polymorphism_array.csv` is an array that contains information on the number of populations a locus was observed, the number of populations in which a locus was polymorphic, the number of populations in which a locus was monomorphic, and the proportion of the number of populations in which a locus was polymorphic compared to the total number of populations in which the locus was observed.
+- `inputfile_polymorphism_array.csv` is an array that contains information on the number of populations in which a locus was observed, the number of populations in which a locus was polymorphic, the number of populations in which a locus was monomorphic, and the proportion of the number of populations in which a locus was polymorphic compared out of the total number of populations in which the locus was observed.
 
 ![img](https://github.com/nclowell/SeaCukes/blob/master/Imgs_for_Notebooks/polymorph_array_for_readme.png?raw=true)
 
