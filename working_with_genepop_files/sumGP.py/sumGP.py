@@ -50,7 +50,7 @@ HWE_out_filename = corename + "_HWE_out.txt"
 Fst_out_filename = corename + "_Fst_out.txt"
 Fst_out_filename2 = corename + "_Fst_global_out.txt"
 Diff_out_filename = corename + "_Diff_out.txt"
-BasicInfo_out_filename = corename + "BI_out.txt"
+BasicInfo_out_filename = corename + "_BI_out.txt"
 
 # make directory for genepop summary files, if doesn't already exist
 os.chdir(gp_dir)
