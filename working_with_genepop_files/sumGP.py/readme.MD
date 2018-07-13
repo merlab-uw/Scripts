@@ -24,13 +24,40 @@ In addition to the Genepop output files, `sumGP.py` produces additional plots an
 
 ![img](https://github.com/nclowell/SeaCukes/blob/master/Imgs_for_Notebooks/afs_for_sumgpreadme2.png?raw=true)
 
-- `inputfile_Fst_gendiff_array.csv` is a pairwise population comparison table where values in the upper right are p- values from the genic differentiation tests, and values in the lower left are Fst estimates.
+- `inputfile_Fst_gendiff_array.csv` is a pairwise population comparison table where values in the upper right are p- values from the genic differentiation tests, and values in the lower left are Fst estimates. NAs will the cells where populations are compared to themselves.
 
-![img]()
+![img](https://github.com/nclowell/SeaCukes/blob/master/Imgs_for_Notebooks/diff_fst_for_readme.png?raw=true)
 
-- 
+- `intputfile_pval_array.csv` is an array made from parsing the Hardy Weinberg exact test output into a more computer readable CSV file. It includes the p-value from the Hardy Weinberg exact test by population.
+
+![img](https://github.com/nclowell/SeaCukes/blob/master/Imgs_for_Notebooks/pval_for_readme.png?raw=true)
+
+- `inputfile_polymorphism_array.csv` is an array that contains information on the number of populations a locus was observed, the number of populations in which a locus was polymorphic, the number of populations in which a locus was monomorphic, and the proportion of the number of populations in which a locus was polymorphic compared to the total number of populations in which the locus was observed.
+
+![img](https://github.com/nclowell/SeaCukes/blob/master/Imgs_for_Notebooks/polymorph_array_for_readme.png?raw=true)
+
+- `inputfile_HWE_hist.png` is an image file of a histogram of the number of populations for which a locus was out of Hardy Weinberg.
+
+![img](https://github.com/nclowell/SeaCukes/blob/master/Imgs_for_Notebooks/hwe_hist_for_readme.png?raw=true)
+
+- `inputfile_polymorph_counts_hist.png` is an image file of a histogram of counts of populations for which a locus was polymorphic.
+
+![img](https://github.com/nclowell/SeaCukes/blob/master/Imgs_for_Notebooks/polymorph_hist_for_readme.png?raw=true)
+
+- `inputfile_globalFis_hist.png` is an image file of a histogram of global Fis per locus.
+
+![img](https://github.com/nclowell/SeaCukes/blob/master/Imgs_for_Notebooks/global_fis_for_readme.png?raw=true)
+
+- `inputfile_globalFit_hist.png` is an image file of a histogram of global Fit per locus.
+
+![img](https://github.com/nclowell/SeaCukes/blob/master/Imgs_for_Notebooks/global_fit_for_readme.png?raw=true)
+
+- `inputfile_globalFst_hist.png` is an image file of a histogram of global Fst per locus.
+
+![img](https://github.com/nclowell/SeaCukes/blob/master/Imgs_for_Notebooks/global_fst_for_readme.png?raw=true)
 
 ### Dependencies
+
 
 This script calls the `genepop` package in R, so you have to have installed both R and this package. Additionally, the R script `runGP_to_sumGP.R` should be saved in the same directory as the `sumGP.py` script. The parsing of Genepop output files depends on filenames that do not start with "-". The script uses the nonstandard modules `matplotlib` and `numpy`, so make sure they are installed.
 ### Help
